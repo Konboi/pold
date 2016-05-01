@@ -1,2 +1,6 @@
 package: github.com/Konboi/pold
 import:
+- package: github.com/codegangsta/cli
+- package: gopkg.in/yaml.v2
+- package: github.com/pkg/errors
+- package: github.com/julienschmidt/httprouter

@@ -1,0 +1,14 @@
+hash: 3045fd8df1c137cdf3e9ff4662a38e022f8a5afc516941423cb968d3cdd07da6
+updated: 2016-05-02T01:46:32.383303815+09:00
+imports:
+- name: github.com/codegangsta/cli
+  version: ff84ca213d003974c6900fdbde23332111d661c6
+- name: github.com/julienschmidt/httprouter
+  version: 77366a47451a56bb3ba682481eed85b64fea14e8
+- name: github.com/Konboi/pold
+  version: e04755fb58a35df8149a04684d0a844557dc2469
+- name: github.com/pkg/errors
+  version: 7a0abd8f636d0048ea2fca80a67a23ef8c0e5c7d
+- name: gopkg.in/yaml.v2
+  version: a83829b6f1293c91addabc89d0571c246397bbf4
+devImports: []
