@@ -54,6 +54,6 @@ func launchServer(c *cli.Context) {
 	}
 
 	server := pold.NewServer(conf)
-
 	server.Run()
+
 }

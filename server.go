@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -30,6 +31,7 @@ type View struct {
 	Blog  *Blog
 	Post  *Post
 	Posts *Posts
+	Test  string
 }
 
 var (
@@ -43,7 +45,7 @@ func NewServer(conf Config) (server *Server) {
 	}
 }
 
-func (s *Server) Run() error {
+func (s *Server) Run() {
 	b, err := s.BlogInfo()
 	blog = b
 
@@ -58,7 +60,7 @@ func (s *Server) Run() error {
 	router.GET("/", IndexHandler)
 	router.GET("/post/*path", PostHandler)
 
-	return http.ListenAndServe(":"+strconv.Itoa(s.conf.Port), router)
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(s.conf.Port), router))
 }
 
 func (s *Server) BlogInfo() (*Blog, error) {
@@ -85,5 +87,14 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	fmt.Fprint(w, ps.ByName("path"))
+
+	path := strings.Trim(ps.ByName("path"), ".html")
+	view := &View{
+		Test: path,
+	}
+
+	if err := tmpl.ExecuteTemplate(w, "post", view); err != nil {
+		log.Fatal(err)
+	}
+
 }
