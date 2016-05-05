@@ -36,7 +36,7 @@ type View struct {
 	Post    *Post
 	Posts   *Posts
 	Test    string
-	Content []byte
+	Content template.HTML
 }
 
 var (
@@ -103,11 +103,11 @@ func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	common := blackfriday.MarkdownCommon(postFile)
-	post := bluemonday.UGCPolicy().SanitizeBytes(common)
+	post := bluemonday.UGCPolicy().Sanitize(string(common))
 
 	view := &View{
 		Test:    path,
-		Content: post,
+		Content: template.HTML(post),
 	}
 
 	if err := tmpl.ExecuteTemplate(w, "post", view); err != nil {
