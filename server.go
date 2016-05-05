@@ -3,7 +3,6 @@ package pold
 import (
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -11,8 +10,6 @@ import (
 	"strings"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/microcosm-cc/bluemonday"
-	"github.com/russross/blackfriday"
 )
 
 type Server struct {
@@ -26,7 +23,7 @@ type Blog struct {
 
 type Post struct {
 	Title   string
-	Content string
+	Content template.HTML
 }
 
 type Posts []Post
@@ -97,17 +94,15 @@ func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	path := strings.Trim(ps.ByName("path"), ".html")
 	postFilePath := fmt.Sprintf("%s/post%s.md", root, path)
 
-	postFile, err := ioutil.ReadFile(postFilePath)
+	post, err := NewPost(postFilePath)
+
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	common := blackfriday.MarkdownCommon(postFile)
-	post := bluemonday.UGCPolicy().Sanitize(string(common))
-
 	view := &View{
-		Test:    path,
-		Content: template.HTML(post),
+		Test: path,
+		Post: post,
 	}
 
 	if err := tmpl.ExecuteTemplate(w, "post", view); err != nil {
