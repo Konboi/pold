@@ -21,13 +21,6 @@ type Blog struct {
 	Author string
 }
 
-type Post struct {
-	Title   string
-	Content template.HTML
-}
-
-type Posts []Post
-
 type View struct {
 	Blog    *Blog
 	Post    *Post
