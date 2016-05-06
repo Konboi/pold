@@ -18,40 +18,36 @@ type PostHeader struct {
 }
 
 type Post struct {
-	Header  *PostHeader
-	Content template.HTML
+	Header     *PostHeader
+	ContentStr string
+	Content    template.HTML
 }
 
 type Posts []Post
 
 var (
-	headerSeparatorStr = `---\n+`
-	headerSeparator    = regexp.MustCompile(headerSeparatorStr)
+	postSeparatorStr = `---\n+`
+	postSeparator    = regexp.MustCompile(postSeparatorStr)
 )
 
-func parseHeader(contentStr string) (*PostHeader, error) {
-	header := headerSeparator.Split(contentStr, 3)
+func parsePost(postStr string) (*Post, error) {
+	splitContent := postSeparator.Split(postStr, 3)
 
-	if len(header) != 3 || header[0] != "" {
-		return nil, fmt.Errorf("header format is invalid")
+	if len(splitContent) != 3 || splitContent[0] != "" {
+		return nil, fmt.Errorf("content format is invalid")
 	}
 
 	postHeader := &PostHeader{}
-	if err := yaml.Unmarshal([]byte(header[1]), postHeader); err != nil {
+	if err := yaml.Unmarshal([]byte(splitContent[1]), postHeader); err != nil {
 		return nil, err
 	}
 
-	return postHeader, nil
-}
-
-func parseContent(contentStr string) (string, error) {
-	content := headerSeparator.Split(contentStr, 3)
-
-	if len(content) != 3 || content[0] != "" {
-		return "", fmt.Errorf("content format is invalid")
+	post := &Post{
+		Header:     postHeader,
+		ContentStr: splitContent[2],
 	}
 
-	return content[2], nil
+	return post, nil
 }
 
 func NewPost(path string) (*Post, error) {
@@ -61,26 +57,18 @@ func NewPost(path string) (*Post, error) {
 		return nil, errors.Wrap(err, "error read path")
 	}
 
-	contentStr := string(postFile)
+	postStr := string(postFile)
 
-	header, err := parseHeader(contentStr)
-	if err != nil {
-		return nil, errors.Wrap(err, "fail parse header")
-	}
-
-	parseContentStr, err := parseContent(contentStr)
+	post, err := parsePost(postStr)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "fail parse content")
 	}
 
-	md := blackfriday.MarkdownCommon([]byte(parseContentStr))
+	md := blackfriday.MarkdownCommon([]byte(post.ContentStr))
 	content := bluemonday.UGCPolicy().Sanitize(string(md))
 
-	post := &Post{
-		Header:  header,
-		Content: template.HTML(content),
-	}
+	post.Content = template.HTML(content)
 
 	return post, nil
 }
