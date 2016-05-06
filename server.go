@@ -90,7 +90,9 @@ func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	post, err := NewPost(postFilePath)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err.Error())
+		notFound(w)
+		return
 	}
 
 	view := &View{
@@ -101,5 +103,10 @@ func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if err := tmpl.ExecuteTemplate(w, "post", view); err != nil {
 		log.Fatal(err)
 	}
+}
 
+func notFound(w http.ResponseWriter) {
+	code := http.StatusNotFound
+
+	http.Error(w, http.StatusText(code), code)
 }

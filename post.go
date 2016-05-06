@@ -58,7 +58,6 @@ func NewPost(path string) (*Post, error) {
 	}
 
 	postStr := string(postFile)
-
 	post, err := parsePost(postStr)
 
 	if err != nil {
