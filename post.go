@@ -55,7 +55,7 @@ func parsePost(postStr string) (*Post, error) {
 }
 
 func NewPost(path string) (*Post, error) {
-	path = fmt.Sprintf("%s/%s", root, path)
+	path = fmt.Sprintf("%s/post%s.md", root, path)
 
 	postFile, err := ioutil.ReadFile(path)
 
@@ -88,7 +88,9 @@ func PublishedPosts() (Posts, error) {
 		}
 
 		if !info.IsDir() {
-			path = strings.Replace(path, root, "", -1)
+			path = strings.Replace(path, fmt.Sprintf("%s/post", root), "", -1)
+			path = strings.Replace(path, ".md", "", -1)
+
 			post, err := NewPost(path)
 
 			if err != nil {
