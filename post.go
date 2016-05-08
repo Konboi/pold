@@ -55,9 +55,9 @@ func parsePost(postStr string) (*Post, error) {
 }
 
 func NewPost(path string) (*Post, error) {
-	path = fmt.Sprintf("%s/post%s.md", root, path)
+	filePath := fmt.Sprintf("%s/post%s.md", root, path)
 
-	postFile, err := ioutil.ReadFile(path)
+	postFile, err := ioutil.ReadFile(filePath)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "error read path")
@@ -74,11 +74,12 @@ func NewPost(path string) (*Post, error) {
 	content := bluemonday.UGCPolicy().Sanitize(string(md))
 
 	post.Content = template.HTML(content)
+	post.Path = path
 
 	return post, nil
 }
 
-func PublishedPosts() (Posts, error) {
+func PublishedPosts(count int) (Posts, error) {
 	postRoot := fmt.Sprintf("%s/post/", root)
 
 	var posts Posts
