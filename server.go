@@ -30,10 +30,11 @@ type View struct {
 }
 
 var (
-	blog       *Blog
-	tmpl       = template.Must(template.New("tmpl").ParseGlob("templates/*.html"))
-	root, _    = os.Getwd() // todo set config
-	topPostNum = 10         // TODO: set config
+	blog           *Blog
+	tmpl           = template.Must(template.New("tmpl").ParseGlob("templates/*.html"))
+	root, _        = os.Getwd() // todo set config
+	topPostNum     = 10         // TODO: set config
+	archivePostNum = 9999
 )
 
 func NewServer(conf Config) (server *Server) {
@@ -56,6 +57,7 @@ func (s *Server) Run() {
 	router := httprouter.New()
 	router.GET("/", IndexHandler)
 	router.GET("/post/*path", PostHandler)
+	router.GET("/archive", ArchiveHandler)
 
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(s.conf.Port), router))
 }
@@ -73,7 +75,7 @@ func (s *Server) BlogInfo() (*Blog, error) {
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	posts, err := PublishedPosts()
+	posts, err := PublishedPosts(topPostNum)
 
 	if err != nil {
 		log.Fatal(err)
@@ -87,7 +89,6 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if err := tmpl.ExecuteTemplate(w, "index", view); err != nil {
 		log.Fatal(err)
 	}
-
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -110,6 +111,23 @@ func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	if err := tmpl.ExecuteTemplate(w, "post", view); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func ArchiveHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	posts, err := PublishedPosts(archivePostNum)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	view := &View{
+		Blog:  blog,
+		Posts: posts,
+	}
+
+	if err := tmpl.ExecuteTemplate(w, "archive", view); err != nil {
 		log.Fatal(err)
 	}
 }

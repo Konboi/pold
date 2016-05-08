@@ -25,6 +25,7 @@ type Post struct {
 	Header     *PostHeader
 	ContentStr string
 	Content    template.HTML
+	Path       string
 }
 
 type Posts []*Post
@@ -100,7 +101,7 @@ func PublishedPosts(count int) (Posts, error) {
 
 			posts = append(posts, post)
 
-			if topPostNum <= len(posts) {
+			if count <= len(posts) {
 				return nil
 			}
 		}
