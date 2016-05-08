@@ -24,7 +24,7 @@ type Blog struct {
 type View struct {
 	Blog    *Blog
 	Post    *Post
-	Posts   *Posts
+	Posts   Posts
 	Test    string
 	Content template.HTML
 }
@@ -72,8 +72,15 @@ func (s *Server) BlogInfo() (*Blog, error) {
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	posts, err := PublishedPosts()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	view := &View{
-		Blog: blog,
+		Blog:  blog,
+		Posts: posts,
 	}
 
 	if err := tmpl.ExecuteTemplate(w, "index", view); err != nil {
@@ -98,6 +105,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	view := &View{
 		Test: path,
 		Post: post,
+		Blog: blog,
 	}
 
 	if err := tmpl.ExecuteTemplate(w, "post", view); err != nil {

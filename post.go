@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"os"
+	"path/filepath"
 	"regexp"
 
 	"github.com/microcosm-cc/bluemonday"
@@ -23,7 +25,7 @@ type Post struct {
 	Content    template.HTML
 }
 
-type Posts []Post
+type Posts []*Post
 
 var (
 	postSeparatorStr = `---\n+`
@@ -70,4 +72,33 @@ func NewPost(path string) (*Post, error) {
 	post.Content = template.HTML(content)
 
 	return post, nil
+}
+
+func PublishedPosts() (Posts, error) {
+	postRoot := fmt.Sprintf("%s/post/", root)
+
+	var posts Posts
+	err := filepath.Walk(postRoot, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() {
+			post, err := NewPost(path)
+
+			if err != nil {
+				return err
+			}
+
+			posts = append(posts, post)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, errors.Wrap(err, "fail get post files")
+	}
+
+	return posts, nil
 }
