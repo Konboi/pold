@@ -16,8 +16,9 @@ import (
 )
 
 type PostHeader struct {
-	Title string   `yaml:"title"`
-	Tag   []string `yaml:"tag"`
+	Title     string   `yaml:"title"`
+	Tag       []string `yaml:"tag"`
+	PublishAt string   `yaml:"publish_at"`
 }
 
 type Post struct {
