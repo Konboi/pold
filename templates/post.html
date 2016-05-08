@@ -1,0 +1,8 @@
+{{ define "post" }}
+{{ template "header" . }}
+<h1>{{ .Post.Header.Title }}</h1>
+{{ .Post.Content }}
+
+{{ template "footer" . }}
+
+{{ end }}

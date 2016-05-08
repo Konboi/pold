@@ -1,0 +1,17 @@
+{{ define "index" }}
+{{ template "header" . }}
+
+<h1>{{ .Blog.Title }}</h1>
+
+{{ range .Posts }}
+<h1> {{ .Header.Title }} </h1>
+
+<section>
+  {{ .Content }}
+</section>
+
+{{ end }}
+
+{{ template "footer" . }}
+
+{{ end }}

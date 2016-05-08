@@ -1,0 +1,8 @@
+{{ define "archive" }}
+<h1> archive page </h1>
+
+{{ range .Posts }}
+<p><a href="/post/{{ .Path }}">{{ .Header.Title }}</a></p>
+{{ end }}
+
+{{ end }}
