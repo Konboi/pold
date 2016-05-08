@@ -31,7 +31,7 @@ type View struct {
 
 var (
 	blog           *Blog
-	tmpl           = template.Must(template.New("tmpl").ParseGlob("templates/*.html"))
+	tmpl, _        = template.New("tmpl").ParseGlob("templates/*.html")
 	root, _        = os.Getwd() // todo set config
 	topPostNum     = 10         // TODO: set config
 	archivePostNum = 9999

@@ -18,7 +18,7 @@ var Commands = []cli.Command{
 }
 
 var commandInit = cli.Command{
-	Name:        "setup",
+	Name:        "init",
 	Usage:       "Set up new blog",
 	Description: "Create new blog enviroment",
 	Action:      doInit,
@@ -35,7 +35,11 @@ var commandServer = cli.Command{
 }
 
 func doInit(c *cli.Context) {
-	fmt.Println("init")
+	err := pold.Init()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 }
 
 func launchServer(c *cli.Context) {
