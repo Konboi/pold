@@ -98,6 +98,10 @@ func PublishedPosts() (Posts, error) {
 			}
 
 			posts = append(posts, post)
+
+			if topPostNum <= len(posts) {
+				return nil
+			}
 		}
 
 		return nil

@@ -30,9 +30,10 @@ type View struct {
 }
 
 var (
-	blog    *Blog
-	tmpl    = template.Must(template.New("tmpl").ParseGlob("templates/*.html"))
-	root, _ = os.Getwd()
+	blog       *Blog
+	tmpl       = template.Must(template.New("tmpl").ParseGlob("templates/*.html"))
+	root, _    = os.Getwd()
+	topPostNum = 10 // TODO: set config
 )
 
 func NewServer(conf Config) (server *Server) {
