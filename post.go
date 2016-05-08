@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/pkg/errors"
@@ -53,6 +54,8 @@ func parsePost(postStr string) (*Post, error) {
 }
 
 func NewPost(path string) (*Post, error) {
+	path = fmt.Sprintf("%s/%s", root, path)
+
 	postFile, err := ioutil.ReadFile(path)
 
 	if err != nil {
@@ -84,6 +87,7 @@ func PublishedPosts() (Posts, error) {
 		}
 
 		if !info.IsDir() {
+			path = strings.Replace(path, root, "", -1)
 			post, err := NewPost(path)
 
 			if err != nil {

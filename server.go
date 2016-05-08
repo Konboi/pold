@@ -92,7 +92,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	path := strings.Trim(ps.ByName("path"), ".html")
-	postFilePath := fmt.Sprintf("%s/post%s.md", root, path)
+	postFilePath := path
 
 	post, err := NewPost(postFilePath)
 
