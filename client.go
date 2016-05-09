@@ -74,13 +74,14 @@ func createFile() error {
 
 func archive() string {
 	return `{{ define "archive" }}
+{{ template "header" . }}
 <h1> archive page </h1>
-
 {{ range .Posts }}
 <p><a href="/post/{{ .Path }}">{{ .Header.Title }}</a></p>
 {{ end }}
-
+{{ template "footer" . }}
 {{ end }}
+
 `
 }
 
@@ -119,9 +120,7 @@ func index() string {
 <section>
   {{ .Content }}
 </section>
-
 {{ end }}
-
 {{ template "footer" . }}
 
 {{ end }}
