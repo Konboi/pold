@@ -8,6 +8,9 @@ import (
 	"github.com/pkg/errors"
 )
 
+// TODO
+// Use template at generate file
+
 func Init() error {
 
 	err := createDir()
