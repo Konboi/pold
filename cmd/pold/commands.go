@@ -34,15 +34,17 @@ var commandServer = cli.Command{
 	},
 }
 
-func doInit(c *cli.Context) {
+func doInit(c *cli.Context) error {
 	err := pold.Init()
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return err
 	}
+
+	return nil
 }
 
-func launchServer(c *cli.Context) {
+func launchServer(c *cli.Context) error {
 	query := c.Args().First()
 	config := c.Bool("config")
 
@@ -54,10 +56,11 @@ func launchServer(c *cli.Context) {
 	conf, err := pold.NewConfig(config_path)
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return err
 	}
 
 	server := pold.NewServer(conf)
 	server.Run()
 
+	return nil
 }
