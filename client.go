@@ -48,10 +48,9 @@ func createDir() error {
 func createFile() error {
 	files := make(map[string]string)
 
-	files["archive"] = archive()
-	files["footer"] = footer()
-	files["header"] = header()
+	files["base"] = base()
 	files["index"] = index()
+	files["archive"] = archive()
 	files["post"] = post()
 
 	for k, v := range files {
@@ -72,6 +71,24 @@ func createFile() error {
 	return nil
 }
 
+func base() string {
+	`<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8"/>
+    {{ block header }}
+    {{ end }}
+  </head>
+  <body>
+    {{ block content }}
+    {{ end }}
+    {{ block footer }}
+    {{ end }}
+  </body>
+</html>
+`
+}
+
 func archive() string {
 	return `{{ define "archive" }}
 {{ template "header" . }}
@@ -85,35 +102,14 @@ func archive() string {
 `
 }
 
-func footer() string {
-	return `{{ define "footer" }}
-</body>
-</html>
-{{ end }}
-`
-}
-
-func header() string {
-	return `{{ define "header" }}
-<!doctype html>
-<html lang="js">
-  <head>
-    <meta charset="UTF-8"/>
-    <title>
-      {{ .Blog.Title }}
-    </title>
-  </head>
-  <body>
-{{ end }}
-`
-}
-
 func index() string {
-	return `{{ define "index" }}
-{{ template "header" . }}
+	return `{{ extends "base.html" }}
 
-<h1>{{ .Blog.Title }}</h1>
+{{ block header }}
+<title>{{ .Blog.Title }}</title>
+{{ end }}
 
+{{ block content }}
 {{ range .Posts }}
 <h1> {{ .Header.Title }} </h1>
 
@@ -121,22 +117,12 @@ func index() string {
   {{ .Content }}
 </section>
 {{ end }}
-{{ template "footer" . }}
-
 {{ end }}
 `
 }
 
 func post() string {
-	return `{{ define "post" }}
-{{ template "header" . }}
-<h1>{{ .Post.Header.Title }}</h1>
-{{ .Post.Content }}
-
-{{ template "footer" . }}
-
-{{ end }}
-`
+	return ``
 }
 
 func conf() string {

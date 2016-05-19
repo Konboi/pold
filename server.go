@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/CloudyKit/jet"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -31,7 +32,7 @@ type View struct {
 
 var (
 	blog           *Blog
-	tmpl, _        = template.New("tmpl").ParseGlob("templates/*.html")
+	jetSet         = jet.HTMLNewSet("./templates")
 	root, _        = os.Getwd() // todo set config
 	topPostNum     = 10         // TODO: set config
 	archivePostNum = 9999
@@ -86,8 +87,12 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		Posts: posts,
 	}
 
-	if err := tmpl.ExecuteTemplate(w, "index", view); err != nil {
-		log.Fatal(err)
+	jt, err := jetSet.GetTemplate("index.html")
+	if err != nil {
+		log.Println(err.Error())
+	}
+	if err := jt.Execute(w, nil, view); err != nil {
+		log.Println(err.Error())
 	}
 }
 
@@ -110,8 +115,12 @@ func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		Blog: blog,
 	}
 
-	if err := tmpl.ExecuteTemplate(w, "post", view); err != nil {
+	jt, err := jetSet.GetTemplate("post.html")
+	if err != nil {
 		log.Fatal(err)
+	}
+	if err := jt.Execute(w, nil, view); err != nil {
+		log.Println(err.Error())
 	}
 }
 
@@ -127,8 +136,12 @@ func ArchiveHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		Posts: posts,
 	}
 
-	if err := tmpl.ExecuteTemplate(w, "archive", view); err != nil {
+	jt, err := jetSet.GetTemplate("archive.html")
+	if err != nil {
 		log.Fatal(err)
+	}
+	if err := jt.Execute(w, nil, view); err != nil {
+		log.Println(err.Error())
 	}
 }
 
