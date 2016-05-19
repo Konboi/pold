@@ -32,7 +32,7 @@ type View struct {
 
 var (
 	blog           *Blog
-	jetSet         = jet.HTMLNewSet("./templates")
+	jetSet         = jet.NewHTMLSet("./templates")
 	root, _        = os.Getwd() // todo set config
 	topPostNum     = 10         // TODO: set config
 	archivePostNum = 9999
