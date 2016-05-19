@@ -80,6 +80,7 @@ func base() string {
     {{ end }}
   </head>
   <body>
+    <h1>Hello Pold!!!</h1>
     {{ block content }}
     {{ end }}
     {{ block footer }}
