@@ -72,7 +72,7 @@ func createFile() error {
 }
 
 func base() string {
-	`<!doctype html>
+	return `<!doctype html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8"/>
