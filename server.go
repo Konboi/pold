@@ -20,6 +20,7 @@ type Server struct {
 type Blog struct {
 	Title  string
 	Author string
+	URL    string
 }
 
 type View struct {
@@ -66,6 +67,7 @@ func (s *Server) Run() {
 func (s *Server) BlogInfo() (*Blog, error) {
 	blog := &Blog{
 		Title: s.conf.Title,
+		URL:   s.conf.URL,
 	}
 
 	if blog.Title == "" {
