@@ -27,7 +27,6 @@ type View struct {
 	Blog    *Blog
 	Post    *Post
 	Posts   Posts
-	Test    string
 	Content template.HTML
 }
 
@@ -35,7 +34,7 @@ var (
 	blog           *Blog
 	jetSet         = jet.NewHTMLSet("./templates")
 	root, _        = os.Getwd() // todo set config
-	topPostNum     = 10         // TODO: set config
+	topPostNum     = 999        // TODO: set config
 	archivePostNum = 9999
 )
 
@@ -99,8 +98,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	path := strings.Trim(ps.ByName("path"), ".html")
+	path := strings.Replace(ps.ByName("path"), ".html", "", -1)
 	postFilePath := path
 
 	post, err := NewPost(postFilePath)
@@ -112,7 +110,6 @@ func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	view := &View{
-		Test: path,
 		Post: post,
 		Blog: blog,
 	}

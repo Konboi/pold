@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"os"
-	"path/filepath"
+	"os/exec"
 	"regexp"
 	"strings"
 	"time"
@@ -84,34 +84,26 @@ func NewPost(path string) (*Post, error) {
 func PublishedPosts(count int) (Posts, error) {
 	postRoot := fmt.Sprintf("%s/post/", root)
 
+	out, _ := exec.Command("git", "log", "--name-only", "--pretty=format:", postRoot).Output()
+	files := strings.Split(string(out), "\n")
+
 	var posts Posts
-	err := filepath.Walk(postRoot, func(path string, info os.FileInfo, err error) error {
+	for _, file := range files {
+		if file == "" {
+			continue
+		}
+		path := strings.Replace(file, "post", "", -1)
+		path = strings.Replace(path, ".md", "", -1)
+		post, err := NewPost(path)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
-		if !info.IsDir() {
-			path = strings.Replace(path, fmt.Sprintf("%s/post", root), "", -1)
-			path = strings.Replace(path, ".md", "", -1)
+		posts = append(posts, post)
 
-			post, err := NewPost(path)
-
-			if err != nil {
-				return err
-			}
-
-			posts = append(posts, post)
-
-			if count <= len(posts) {
-				return nil
-			}
+		if count <= len(posts) {
+			break
 		}
-
-		return nil
-	})
-
-	if err != nil {
-		return nil, errors.Wrap(err, "fail get post files")
 	}
 
 	return posts, nil
@@ -152,7 +144,7 @@ func CreatePost(name string) error {
 func tmpl(publishAt string) string {
 	return fmt.Sprintf(`---
 title:
-tags:
+tag:
 publish_at: %s
 ---
 `, publishAt)
