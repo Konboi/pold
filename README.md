@@ -2,6 +2,8 @@
 
 pold is markdown based blog tool.
 
+under development.
+
 # How to use.
 
 ## Init blog
@@ -10,7 +12,15 @@ pold is markdown based blog tool.
 $ pold setup
 
 $ tree
-# todo
+.
+├── pold.yml
+├── post
+└── templates
+    ├── archive.html
+    ├── base.html
+    ├── index.html
+    └── post.html
+2 directories, 5 files
 ```
 
 ## Write a article
@@ -19,10 +29,10 @@ $ tree
 $ date
 Sun May  1 17:53:43 JST 2016
 
-$ pold post new
-create post/2016/05/01/175343.md
+$ pold new sample
+create post/2016/05/01/sample.md
 
-$ emacs post/2016/05/01/175343.md
+$ emacs post/2016/05/01/sample.md
 
 $ pold server -c config.yml # default loading pold.yml
 ```
@@ -33,3 +43,6 @@ Open `localhost:<port>/2016/05/01/175343` by browser.
 
 
 # TODO
+
+- [ ] draft mode
+- [ ] tag page
