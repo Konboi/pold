@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/pkg/errors"
@@ -114,4 +115,45 @@ func PublishedPosts(count int) (Posts, error) {
 	}
 
 	return posts, nil
+}
+
+func CreatePost(name string) error {
+	_, err := os.Stat("post")
+
+	if err != nil {
+		return errors.Wrap(err, "not exits post firectory")
+	}
+
+	dir := fmt.Sprintf("post/%s", time.Now().Format("2006/01/02"))
+	_, err = os.Stat(dir)
+
+	if err != nil {
+		os.MkdirAll(dir, 0755)
+	}
+
+	publishAt := time.Now().Format("2006-01-02")
+	tmpl := tmpl(publishAt)
+
+	filePath := fmt.Sprintf("%s/%s.md", dir, name)
+	file, err := os.Create(filePath)
+	if err != nil {
+		return errors.Wrap(err, "fail file create")
+	}
+	defer file.Close()
+
+	_, err = file.Write([]byte(tmpl))
+	if err != nil {
+		return errors.Wrap(err, "fail write default format")
+	}
+
+	return nil
+}
+
+func tmpl(publishAt string) string {
+	return fmt.Sprintf(`---
+title:
+tags:
+publish_at: %s
+---
+`, publishAt)
 }

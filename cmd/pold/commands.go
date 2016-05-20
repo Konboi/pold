@@ -15,6 +15,7 @@ const (
 var Commands = []cli.Command{
 	commandInit,
 	commandServer,
+	commandPost,
 }
 
 var commandInit = cli.Command{
@@ -32,6 +33,13 @@ var commandServer = cli.Command{
 	Flags: []cli.Flag{
 		cli.BoolFlag{Name: "config, c", Usage: "Set config path"},
 	},
+}
+
+var commandPost = cli.Command{
+	Name:        "new",
+	Usage:       "create new post",
+	Description: "",
+	Action:      newPost,
 }
 
 func doInit(c *cli.Context) error {
@@ -61,6 +69,16 @@ func launchServer(c *cli.Context) error {
 
 	server := pold.NewServer(conf)
 	server.Run()
+
+	return nil
+}
+
+func newPost(c *cli.Context) error {
+	err := pold.CreatePost(c.Args()[0])
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
