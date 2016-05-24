@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 
@@ -31,9 +32,22 @@ type Post struct {
 
 type Posts []*Post
 
+type ByPublishedAt struct{ Posts }
+
+func (bpa ByPublishedAt) Len() int      { return len(bpa.Posts) }
+func (bpa ByPublishedAt) Swap(i, j int) { bpa.Posts[i], bpa.Posts[j] = bpa.Posts[j], bpa.Posts[i] }
+func (bpa ByPublishedAt) Less(i, j int) bool {
+	iPublishAt, _ := time.Parse(publishAtFormt, bpa.Posts[i].Header.PublishAt)
+	jPubljshAt, _ := time.Parse(publishAtFormt, bpa.Posts[j].Header.PublishAt)
+
+	return jPubljshAt.Unix() < iPublishAt.Unix()
+}
+
 var (
 	postSeparatorStr = `---\n+`
 	postSeparator    = regexp.MustCompile(postSeparatorStr)
+
+	publishAtFormt = "2006-01-02"
 )
 
 func parsePost(postStr string) (*Post, error) {
@@ -113,6 +127,8 @@ func PublishedPosts(count int) (Posts, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "fail get post files")
 	}
+
+	sort.Sort(ByPublishedAt(ByPublishedAt{posts}))
 
 	return posts, nil
 }
