@@ -168,7 +168,7 @@ func CreatePost(name string) error {
 func tmpl(publishAt string) string {
 	return fmt.Sprintf(`---
 title:
-tags:
+tag:
 publish_at: %s
 ---
 `, publishAt)
