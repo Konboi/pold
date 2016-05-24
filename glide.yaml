@@ -1,6 +1,9 @@
 package: github.com/Konboi/pold
 import:
+- package: github.com/CloudyKit/jet
 - package: github.com/codegangsta/cli
-- package: gopkg.in/yaml.v2
-- package: github.com/pkg/errors
 - package: github.com/julienschmidt/httprouter
+- package: github.com/microcosm-cc/bluemonday
+- package: github.com/pkg/errors
+- package: github.com/russross/blackfriday
+- package: gopkg.in/yaml.v2

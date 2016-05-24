@@ -1,5 +1,0 @@
-package: github.com/Konboi/pold/cmd/pold
-import:
-- package: github.com/Konboi/pold
-- package: github.com/codegangsta/cli
-- package: github.com/pkg/errors
