@@ -27,7 +27,6 @@ type View struct {
 	Blog    *Blog
 	Post    *Post
 	Posts   Posts
-	Test    string
 	Content template.HTML
 }
 
@@ -112,7 +111,6 @@ func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	view := &View{
-		Test: path,
 		Post: post,
 		Blog: blog,
 	}
