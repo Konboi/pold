@@ -1,0 +1,15 @@
+{{ extends "base.html" }}
+
+{{ block header }}
+<title>{{ .Blog.Title }}</title>
+{{ end }}
+
+{{ block content }}
+{{ range .Posts }}
+<h1> {{ .Header.Title }} </h1>
+
+<section>
+  {{ .Content }}
+</section>
+{{ end }}
+{{ end }}

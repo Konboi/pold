@@ -116,7 +116,7 @@ func PublishedPosts(count int) (Posts, error) {
 
 			posts = append(posts, post)
 
-			if count <= len(posts) {
+			if count != -1 && count <= len(posts) {
 				return nil
 			}
 		}
@@ -131,6 +131,25 @@ func PublishedPosts(count int) (Posts, error) {
 	sort.Sort(ByPublishedAt(ByPublishedAt{posts}))
 
 	return posts, nil
+}
+
+func PublishedPostsByTagName(tag string) (Posts, error) {
+	tagPosts := make(Posts, 0)
+	posts, err := PublishedPosts(-1)
+	if err != nil {
+		return tagPosts, err
+	}
+
+	for _, post := range posts {
+		for _, t := range post.Header.Tag {
+			if t == tag {
+				tagPosts = append(tagPosts, post)
+				break
+			}
+		}
+	}
+
+	return tagPosts, nil
 }
 
 func CreatePost(name string) error {
