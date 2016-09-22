@@ -1,0 +1,23 @@
+<feed xmlns="http://www.w3.org/2005/Atom"  xml:lang="ja">
+  <title>{{ .Blog.Title }}</title>
+  <link href="{{ .Blog.URL }}"/>
+  <generator uri="https://github.com/Konboi/pold" version="v0.0.1">pold</generator>
+  <id>pold:{{ .Blog.URL }}</id>
+  <updated>{{ .Posts[0].Header.PublishAt }}</updated>
+  {{ blog := .Blog }}
+  {{ range .Posts }}
+  <entry>
+    <id>pold:{{ blog.URL}}:post{{.Path }}.html</id>
+    <title>{{ .Header.Title }}</title>
+    <link href="{{ blog.URL }}/post{{.Path }}.html" />
+    <author>
+      <name>{{ blog.Author }}</name>
+    </author>
+    <content type="html">
+      {{ .Content }}
+    </content>
+    <publishedat>{{ .Header.PublishAt }}</publishedat>
+    <updatedat>{{ .Header.PublishAt }}</updatedat>
+  </entry>
+  {{ end }}
+</feed>

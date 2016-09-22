@@ -36,6 +36,7 @@ var (
 	root, _        = os.Getwd() // todo set config
 	topPostNum     = 10         // TODO: set config
 	archivePostNum = 9999
+	atomFeedNum    = 10
 )
 
 func NewServer(conf Config) (server *Server) {
@@ -57,6 +58,7 @@ func (s *Server) Run() {
 
 	router := httprouter.New()
 	router.GET("/", IndexHandler)
+	router.GET("/atom.xml", AtomHandler)
 	router.GET("/post/*path", PostHandler)
 	router.GET("/archive", ArchiveHandler)
 
@@ -65,8 +67,9 @@ func (s *Server) Run() {
 
 func (s *Server) BlogInfo() (*Blog, error) {
 	blog := &Blog{
-		Title: s.conf.Title,
-		URL:   s.conf.URL,
+		Title:  s.conf.Title,
+		URL:    s.conf.URL,
+		Author: s.conf.Author,
 	}
 
 	if blog.Title == "" {
@@ -135,6 +138,28 @@ func ArchiveHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	}
 
 	jt, err := jetSet.GetTemplate("archive.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := jt.Execute(w, nil, view); err != nil {
+		log.Println(err.Error())
+	}
+}
+
+func AtomHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	posts, err := PublishedPosts(atomFeedNum)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	view := &View{
+		Blog:  blog,
+		Posts: posts,
+	}
+
+	w.Header().Set("Content-Type", "application/atom+xml")
+	jt, err := jetSet.GetTemplate("atom.xml")
 	if err != nil {
 		log.Fatal(err)
 	}
