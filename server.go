@@ -28,6 +28,7 @@ type View struct {
 	Post    *Post
 	Posts   Posts
 	Content template.HTML
+	Tag     string
 }
 
 var (
@@ -58,9 +59,10 @@ func (s *Server) Run() {
 
 	router := httprouter.New()
 	router.GET("/", IndexHandler)
-	router.GET("/atom.xml", AtomHandler)
 	router.GET("/post/*path", PostHandler)
+	router.GET("/tag/*tag", TagHandler)
 	router.GET("/archive", ArchiveHandler)
+	router.GET("/atom.xml", AtomHandler)
 
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(s.conf.Port), router))
 }
@@ -140,6 +142,34 @@ func ArchiveHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	jt, err := jetSet.GetTemplate("archive.html")
 	if err != nil {
 		log.Fatal(err)
+	}
+	if err := jt.Execute(w, nil, view); err != nil {
+		log.Println(err.Error())
+	}
+}
+
+func TagHandler(w http.ResponseWriter, r *http.Request, tag httprouter.Params) {
+	tagName := strings.Replace(tag.ByName("tag"), "/", "", -1)
+	tagName = strings.Replace(tagName, ".html", "", -1)
+
+	posts, err := PublishedPostsByTagName(tagName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if len(posts) == 0 {
+		notFound(w)
+		return
+	}
+
+	view := &View{
+		Blog:  blog,
+		Posts: posts,
+		Tag:   tagName,
+	}
+
+	jt, err := jetSet.GetTemplate("tag.html")
+	if err != nil {
+		log.Println(err.Error())
 	}
 	if err := jt.Execute(w, nil, view); err != nil {
 		log.Println(err.Error())
