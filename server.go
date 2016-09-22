@@ -65,8 +65,9 @@ func (s *Server) Run() {
 
 func (s *Server) BlogInfo() (*Blog, error) {
 	blog := &Blog{
-		Title: s.conf.Title,
-		URL:   s.conf.URL,
+		Title:  s.conf.Title,
+		URL:    s.conf.URL,
+		Author: s.conf.Author,
 	}
 
 	if blog.Title == "" {
