@@ -18,16 +18,16 @@ import (
 )
 
 type PostHeader struct {
-	Title     string   `yaml:"title"`
-	Tag       []string `yaml:"tag"`
-	PublishAt string   `yaml:"publish_at"`
+	Title     string   `yaml:"title" json:"title"`
+	Tag       []string `yaml:"tag" json:"tag"`
+	PublishAt string   `yaml:"publish_at" json:"publish_at"`
 }
 
 type Post struct {
-	Header     *PostHeader
-	ContentStr string
-	Content    template.HTML
-	Path       string
+	Header     *PostHeader   `json:"header"`
+	ContentStr string        `json:"content_str"`
+	Content    template.HTML `json:"content"`
+	Path       string        `json:"path"`
 }
 
 type Posts []*Post
