@@ -18,9 +18,9 @@ type Server struct {
 }
 
 type Blog struct {
-	Title  string
-	Author string
-	URL    string
+	Title  string `json:"title"`
+	Author string `json:"author"`
+	URL    string `json:"url"`
 }
 
 type View struct {
