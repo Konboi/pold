@@ -54,12 +54,11 @@ func NewServer(conf Config) (server *Server) {
 
 func (s *Server) Run() {
 	b, err := s.BlogInfo()
-	blog = b
 
 	if err != nil {
-		log.Println("error")
-		log.Fatalf(err.Error())
+		log.Fatal("error get blog info", err.Error())
 	}
+	blog = b
 
 	fmt.Printf("pold server start 0.0.0.0:%d \n", s.conf.Port)
 
@@ -95,7 +94,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	posts, err := PublishedPosts(topPostNum)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("error get published posts", err.Error())
 	}
 
 	view := &View{
@@ -130,7 +129,8 @@ func PostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	jt, err := jetSet.GetTemplate("post.html")
 	if err != nil {
-		log.Fatal(err)
+		log.Println("error get post template", err.Error())
+		return
 	}
 	if err := jt.Execute(w, nil, view); err != nil {
 		log.Println(err.Error())
@@ -141,7 +141,7 @@ func ArchiveHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	posts, err := PublishedPosts(archivePostNum)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("error get published archive posts", err.Error())
 	}
 
 	view := &View{
@@ -151,10 +151,12 @@ func ArchiveHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 
 	jt, err := jetSet.GetTemplate("archive.html")
 	if err != nil {
-		log.Fatal(err)
+		log.Println("error get archive template", err.Error())
+		return
 	}
 	if err := jt.Execute(w, nil, view); err != nil {
 		log.Println(err.Error())
+		return
 	}
 }
 
@@ -164,7 +166,8 @@ func TagHandler(w http.ResponseWriter, r *http.Request, tag httprouter.Params) {
 
 	posts, err := PublishedPostsByTagName(tagName)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("get published post by tag name", err.Error())
+		return
 	}
 	if len(posts) == 0 {
 		notFound(w)
@@ -190,7 +193,8 @@ func AtomHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	posts, err := PublishedPosts(atomFeedNum)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("error get published posts for atom feed", err.Error())
+		return
 	}
 
 	view := &View{
