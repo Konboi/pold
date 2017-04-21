@@ -1,0 +1,28 @@
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/CloudyKit/jet"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/codegangsta/cli"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/julienschmidt/httprouter"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/microcosm-cc/bluemonday"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/pkg/errors"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/russross/blackfriday"
+
+[[dependencies]]
+  branch = "v2"
+  name = "gopkg.in/yaml.v2"
