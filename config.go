@@ -11,7 +11,7 @@ import (
 type Config struct {
 	Title  string `yaml:"title"`
 	URL    string `yaml:"url"`
-	Port   int    `yaml:"port:`
+	Port   int    `yaml:"port"`
 	Author string `yaml:"author"`
 }
 
