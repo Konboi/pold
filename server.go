@@ -73,8 +73,9 @@ func (s *Server) Run() {
 		router.GET("/post/*path", PostHandler)
 		router.GET("/tag/*tag", TagHandler)
 		router.GET("/archive", ArchiveHandler)
-		router.GET("/atom.xml", AtomHandler)
 	}
+	router.GET("/atom.xml", AtomHandler)
+
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(s.conf.Port), router))
 }
 
@@ -216,7 +217,7 @@ func AtomHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func IndexAPIHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	posts, err := PublishedPosts(archivePostNum)
+	posts, err := PublishedPosts(topPostNum)
 
 	if err != nil {
 		log.Println("error get published posts", err.Error())
