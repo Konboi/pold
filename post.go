@@ -115,12 +115,7 @@ func PublishedPosts(count int) (Posts, error) {
 			}
 
 			posts = append(posts, post)
-
-			if count != -1 && count <= len(posts) {
-				return nil
-			}
 		}
-
 		return nil
 	})
 
@@ -130,7 +125,11 @@ func PublishedPosts(count int) (Posts, error) {
 
 	sort.Sort(ByPublishedAt(ByPublishedAt{posts}))
 
-	return posts, nil
+	if len(posts) < count {
+		return posts, nil
+	}
+
+	return posts[0:count], nil
 }
 
 func PublishedPostsByTagName(tag string) (Posts, error) {

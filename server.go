@@ -63,18 +63,16 @@ func (s *Server) Run() {
 	fmt.Printf("pold server start 0.0.0.0:%d \n", s.conf.Port)
 
 	router := httprouter.New()
-	if s.conf.APIMode {
-		router.GET("/api/index", IndexAPIHandler)
-		router.GET("/api/post/*path", PostAPIHandler)
-		router.GET("/api/tag/*tag", TagAPIHandler)
-		router.GET("/api/archive", ArchiveAPIHandler)
-	} else {
-		router.GET("/", IndexHandler)
-		router.GET("/post/*path", PostHandler)
-		router.GET("/tag/*tag", TagHandler)
-		router.GET("/archive", ArchiveHandler)
-	}
+
+	router.GET("/", IndexHandler)
+	router.GET("/post/*path", PostHandler)
+	router.GET("/tag/*tag", TagHandler)
+	router.GET("/archive", ArchiveHandler)
 	router.GET("/atom.xml", AtomHandler)
+	router.GET("/api/index", IndexAPIHandler)
+	router.GET("/api/post/*path", PostAPIHandler)
+	router.GET("/api/tag/*tag", TagAPIHandler)
+	router.GET("/api/archive", ArchiveAPIHandler)
 
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(s.conf.Port), router))
 }
