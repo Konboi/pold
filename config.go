@@ -9,11 +9,10 @@ import (
 )
 
 type Config struct {
-	Title   string `yaml:"title"`
-	URL     string `yaml:"url"`
-	Port    int    `yaml:"port"`
-	Author  string `yaml:"author"`
-	APIMode bool   `yaml:"api_mode"`
+	Title  string `yaml:"title"`
+	URL    string `yaml:"url"`
+	Port   int    `yaml:"port"`
+	Author string `yaml:"author"`
 }
 
 func NewConfig(path string) (conf Config, err error) {
