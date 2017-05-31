@@ -134,7 +134,7 @@ func PublishedPosts(count int) (Posts, error) {
 }
 
 func PublishedPostsByTagName(tag string) (Posts, error) {
-	tagPosts := make(Posts, 0)
+	tagPosts := make([]*Post, 0)
 	posts, err := PublishedPosts(-1)
 	if err != nil {
 		return tagPosts, err
