@@ -41,7 +41,7 @@ var (
 	blog           *Blog
 	jetSet         = jet.NewHTMLSet("./templates")
 	root, _        = os.Getwd() // todo set config
-	topPostNum     = 10         // TODO: set config
+	topPostNum     = 5          // TODO: set config
 	archivePostNum = 9999
 	atomFeedNum    = 10
 )
@@ -214,7 +214,7 @@ func AtomHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func IndexAPIHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	posts, err := PublishedPosts(archivePostNum)
+	posts, err := PublishedPosts(topPostNum)
 
 	if err != nil {
 		log.Println("error get published posts", err.Error())
